@@ -1,0 +1,10 @@
+.book-container{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+.book-list{
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    margin: 12px;
+}
