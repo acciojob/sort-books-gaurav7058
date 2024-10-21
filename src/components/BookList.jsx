@@ -1,13 +1,17 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchBooks, setSortCriteria, setSortOrder, sortBooks } from '../Utils/Reducer';
-import "../styles/BookList.css"
+import "../styles/BookList.css";
+
 const BooksList = () => {
   const dispatch = useDispatch();
   const { items, loading, error, sortCriteria, sortOrder } = useSelector((state) => state.books);
 
+  // Fetch books when the component mounts
   useEffect(() => {
-    dispatch(fetchBooks()); // Fetch books on component mount
+    dispatch(fetchBooks()).then(() => {
+      dispatch(sortBooks()); // Sort the books by title (default) after fetch
+    });
   }, [dispatch]);
 
   // Handle sorting criteria change
@@ -27,6 +31,10 @@ const BooksList = () => {
 
   return (
     <div>
+      {/* 1. Render Header */}
+      <h1>Books List</h1>
+
+      {/* 2. Render Sort By and Order dropdowns */}
       <div>
         <label htmlFor="criteria">Sort By:</label>
         <select id="criteria" onChange={handleSortCriteriaChange} value={sortCriteria}>
@@ -42,15 +50,26 @@ const BooksList = () => {
         </select>
       </div>
 
-      <div className="book-container">
-        {items.map((item, id) => (
-          <div className="book-list" key={id}>
-            <h2>{item.book_title}</h2>
-            <p><strong>Author:</strong> {item.book_author}</p>
-            <p><strong>Publisher:</strong> {item.byline}</p>
-          </div>
-        ))}
-      </div>
+      {/* 4. Render the table with book data */}
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publisher</th>
+          </tr>
+        </thead>
+        <tbody>
+          {/* 5. Render the book data in sorted order by title (default) */}
+          {items.map((item, index) => (
+            <tr key={index}>
+              <td>{item.book_title}</td>
+              <td>{item.book_author}</td>
+              <td>{item.byline}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
